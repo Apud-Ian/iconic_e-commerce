@@ -14,9 +14,9 @@ export const FormSize = (onChange) => {
       onChange && onChange(checked ? [...selectedSizes, id] : selectedSizes.filter((size) => size !== id));
     };
     return(
-        <div className=" flex flex-initial flex-col border-2">
+        <div className=" flex flex-initial flex-col">
               <h4>tallas:</h4>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-row justify-between m-1">
               {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
             <label key={size} className="flex items-center gap-2">
                 <input

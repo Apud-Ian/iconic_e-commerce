@@ -1,50 +1,36 @@
 import { NavLink } from "react-router";
 import carrito from "../assets/carro-de-la-compra.png"
-import addProduct from "../assets/agregar-producto.png"
-import { useState } from "react";
-
+import Dropdown from "./DropDown";
 
 const NavBar = ()=>{
-const [hidden, sethidden] = useState(false)
 
     return(
-        <nav className="bg-gray-800 flex justify-between p-1 z-40">
-            <ul className="flex space-x-1 order-1 items-center">
-                <li className="h-12 p-2 items-center">
-                    <NavLink to="/" className={({isActive})=>
-                    `text-white px-3  flex rounded ${
-                    isActive ? "bg-gray-900 font-bold" : "hover:bg-gray-700"}`}>
-                        <div className="w-12 items-center h-8">
-                        <h2 className="text-center items-center">Home</h2>
-                        </div>
+<nav className="bg-white border-gray-200 ">
+    <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4" >
+            <NavLink to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                <span className="self-center text-2xl font-semibold whitespace-nowrap">ICONIC</span>
+            </NavLink>
+        <div className="hidden w-full md:block md:w-auto">
+            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
+            <li className="h-12 p-2 flex items-center">
+                <Dropdown/>
+            </li>
+                 <li className="h-12 p-2 flex items-center">
+                    <NavLink to="/CreateProduct" className="">
+                     Crear objetos nuevos    
                     </NavLink>
                 </li>
-                <li className="h-12 p-2 items-center">
-                    <NavLink to="/ShoppingCart" className={({isActive})=>
-                    `text-white px-3  flex rounded ${
-                    isActive ? "bg-gray-900 font-bold" : "hover:bg-gray-700"}`}>
-                        <div className="w-8 items-center h-8">
-                        <img className="w-full h-full object-cover" src={carrito}/>
+                <li className="h-12 p-2 flex items-center">
+                    <NavLink to="/ShoppingCart" className="block px-4 py-2 hover:bg-gray-100">
+                        <div className="w-8 h-8 flex items-center justify-center"> {/* Centra el ícono */}
+                            <img className="w-full h-full object-cover" src={carrito} />
                         </div>
                     </NavLink>
                 </li>
             </ul>
-            <ul className="order-2 flex space-x-1 items-end">
-            <NavLink to="/CreateProduct" className={({isActive})=>
-                    `text-white p-1 flex rounded ${
-                    isActive ? "bg-gray-900 font-bold" : "hover:bg-gray-700"}`}>
-                <li className={ hidden ? 'w-8 rounded-full' : 'hidden'}>
-                   <div>
-                    <img src={addProduct} alt="" />
-                   </div>
-                </li>
-                </NavLink>
-                <li>
-                    <button onClick={sethidden} className={hidden ? 'bg-green-600' : 'bg-red-700'}>tuky</button>
-                </li>
-            </ul>
-
-        </nav>
+        </div>
+    </div>
+</nav>
     )
 }
 
