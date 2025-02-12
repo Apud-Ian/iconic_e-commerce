@@ -25,7 +25,6 @@ import { useState } from "react";
 
   return (
     <div>
-      {/* Input de imágenes */}
       <div>
         <label className="block text-gray-700 font-medium mb-1">Imagen</label>
         <input
@@ -37,17 +36,17 @@ import { useState } from "react";
         />
       </div>
 
-      <div className="flex flex-col ">
+      <div className="flex overflow-y-scroll max-h-24 flex-col ">
         {images.map((img, index) => (
-          <div key={img.file.name} className="m-1border border-gray-300 rounded-lg">
-            <img src={img.previewUrl} alt="Preview" className="w-[100px] basis-2/3  h-auto" />
-
-            {/* Selector de colores */}
-            <div className="flex flex-col basis-1/3 m-1">
+          <div key={img.file.name} className="m-1 border flex items-center justify-between gap-2 p-2 border-gray-300 rounded-lg">
+            <div className="m-2 w-1/8"> 
+            <img src={img.previewUrl} alt="Preview" className="w-[50px] h-auto" />
+            </div>
+            <div className="flex w-7/8 flex-row justify-between m-1">
               {["red", "blue", "yellow", "green", "orange", "purple", "white", "black", "brown", "gray", "pink"].map((color) => (
                 <div
                   key={color}
-                  className={`w-6 h-6 rounded-full cursor-pointer border ${
+                  className={`w-6 h-6 rounded-sm cursor-pointer border ${
                     colors[index] === color ? "ring-2 ring-black" : ""
                   }`}
                   style={{ backgroundColor: color }}

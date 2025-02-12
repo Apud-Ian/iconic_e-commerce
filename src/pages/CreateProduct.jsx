@@ -2,7 +2,7 @@ import AdminForm from "../components/AdminForm";
 
 const CreateProduct =()=>{
     return(
-        <div className="min-h-screen w-full bg-gray-400 flex items-center justify-center gap-8 p-8">
+        <div className="min-h-screen w-full bg-gray-400 flex items-center justify-between gap-4 p-4">
             <AdminForm/>
             <div className="w-1/4 bg-white p-6 shadow-lg rounded-lg">
                 <h3 className="text-xl font-semibold mb-4">Vista Previa</h3>
