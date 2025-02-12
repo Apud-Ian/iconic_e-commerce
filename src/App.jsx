@@ -15,7 +15,7 @@ function App() {
       <div>
         <NavBar/>
         <Routes>
-          <Route path="/" element={<HomePage/>} />
+          <Route path="/iconic_e-commerce/" element={<HomePage/>} />
           <Route path="/createProduct" element={<CreateProduct/>}/>
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route path='/product/:id' element={<ProductPage />}/>

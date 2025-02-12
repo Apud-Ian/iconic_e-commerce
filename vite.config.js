@@ -7,5 +7,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base : 'http://pruebasgit-dev.github.io/iconic',
+  base : '/iconic/',
 })
