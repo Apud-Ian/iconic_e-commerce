@@ -1,6 +1,7 @@
 import apiClient from "./config.js";
  
 export const getAllProductByCategoria = async (category) => { 
+
   try {
     const response = await apiClient.get(`/products/category/${category}`);
     return response;  
