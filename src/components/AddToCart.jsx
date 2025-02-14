@@ -21,7 +21,7 @@ const AddToCart = ({ item }) => {
     };
   
     return (
-        <NavLink to='/ShoppingCart'>
+        <NavLink to='/iconic_e-commerce/ShoppingCart'>
       <button
         onClick={handleAddToCart}
         type="button"

@@ -63,21 +63,34 @@ const CategoryPage = () =>{
   }
 
     return(
-    <div className="h-screen w-full bg-">
-      <div className="p-8">
-      <div className="inline-flex justify-between gap-3 m-2 rounded-md shadow-xs">
-      <button onClick={() => setOrder("lower")}  className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white">
-        menor precio 
-      </button>
-      <button onClick={() => setOrder("higher")} className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white">
-        mayor precio
-      </button>
-    </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {sortedProducts.map((item, index) => <Card key={index} item={item} />)}
-      </div>
-    </div>
-    </div>
+<div className="p-8">
+  {/* Título */}
+  <h3 className="text-2xl font-semibold mb-4">Ordenar por precio</h3>
+
+  {/* Botones de ordenamiento */}
+  <div className="flex gap-4 mb-6">
+    <button 
+      onClick={() => setOrder("lower")}  
+      className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
+    >
+      Menor precio 
+    </button>
+    <button 
+      onClick={() => setOrder("higher")} 
+      className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
+    >
+      Mayor precio
+    </button>
+  </div>
+
+  {/* Productos ordenados */}
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {sortedProducts.map((item, index) => (
+      <Card key={index} item={item} />
+    ))}
+  </div>
+</div>
+
     );
 };
 

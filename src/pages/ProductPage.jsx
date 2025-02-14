@@ -1,15 +1,18 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import AddToCart from "../components/AddToCart.jsx";
 import { getAllProductByCategoria, getProductById } from "../api/product.js";
 import Card from "../components/Card.jsx";
+
 const ProductPage = () => {
   const [data, setData] = useState(null);
   const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const location = useLocation();
 
-  // Obtener datos del producto
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,6 +44,11 @@ const ProductPage = () => {
     fetchCategory();
   }, [data?.category]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [location.pathname]);
+
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen w-full flex-col">
@@ -64,9 +72,10 @@ const ProductPage = () => {
 
   if (!data) return <p>No se encontró el producto</p>;
 
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <div className="flex flex-col md:flex-row items-center gap-6">
+    <div className="w-full mx-auto p-6 grid-cols-1 justify-center align-middle bg-white shadow-md rounded-lg">
+      <div className="flex max-w-4xl  flex-col md:flex-row items-center gap-6  shadow-lg">
         <img
           src={data.image}
           alt={data.name}
@@ -76,17 +85,15 @@ const ProductPage = () => {
           <h1 className="text-2xl font-bold">{data.name}</h1>
           <p className="text-lg text-gray-700">{data.description}</p>
           <span className="text-xl font-semibold text-green-600">
-            ${data.price}
+            ${Math.trunc(43*data.price)}
           </span>
-          <button className="mt-4 px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition duration-300">
-            Agregar al carrito
-          </button>
+        <AddToCart item={data}/>
         </div>
       </div>
 
       <div className="mt-10">
         <h2 className="text-xl font-semibold mb-4">Productos relacionados</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {category.slice(0, 4).map((item, index) => (
             <Card key={index} item={item} />
           ))}
