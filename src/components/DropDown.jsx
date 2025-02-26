@@ -26,11 +26,11 @@ export default function Dropdown() {
           <ul className="flex flex-row md:flex-col items-start md:items-center justify-start gap-2">
             <li>
               <NavLink
-                to="iconic_e-commerce/Category/jewelery"
+                to="iconic_e-commerce/Category/vestido"
                 className="block px-4 py-2 text-gray-700 hover:bg-blue-100 rounded-md transition duration-200"
-                onClick={() => handleSelect("Joyería")}
+                onClick={() => handleSelect("vestido")}
               >
-                Joyería
+                vestido
               </NavLink>
             </li>
             <li>

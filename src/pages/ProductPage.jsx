@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import AddToCart from "../components/AddToCart.jsx";
-import { getAllProductByCategoria, getProductById } from "../api/product.js";
+import {getByCat, getProductById } from "../api/product.js";
 import Card from "../components/Card.jsx";
 
 const ProductPage = () => {
@@ -34,7 +34,7 @@ const ProductPage = () => {
 
     const fetchCategory = async () => {
       try {
-        const categoryData = await getAllProductByCategoria(data.category);
+        const categoryData = await getByCat(data.category);
         setCategory(categoryData);
       } catch (err) {
         setError(err.message);
