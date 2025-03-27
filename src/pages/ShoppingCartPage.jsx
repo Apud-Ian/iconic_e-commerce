@@ -1,48 +1,62 @@
 import { useState, useEffect } from "react";
 import Cart from "../components/Cart.jsx";
-
+import { getUser } from "../api/user.js";
+import { getCartByUser } from "../api/shopCart.js";
+import WhatsAppCartButton from "../components/WhatsAppCartButton.jsx";
+import ButtonShopOnline from "../components/ButtonShopOnline.jsx"
 const ShoppingCartPage = () => {
-  const [productsCart, setProductsCart] = useState([]);
-  let [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalDiscount, setTotalDiscount] = useState(0);
+  const [user, setUser] = useState(null);
+  const [userGmail , setUserGmail] = useState(null)
+  const [products, setProducts] = useState([]);
 
-  // Función para obtener datos del carrito
-  const fetchCartData = () => {
-    const cartList = localStorage.getItem("cartList");
-    const parsedCart = cartList ? JSON.parse(cartList) : [];
-    setProductsCart(parsedCart);
-  };
-
-  // Obtener carrito al cargar la página
   useEffect(() => {
-    fetchCartData();
+    const checkUser = async () => {
+      const result = await getUser();
+      if (result) {
+        setUser(result.Id_User);
+        setUserGmail(result.User_Gmail)
+      } else {
+        fetchCartDataStorage();
+      }
+    };
+    checkUser();
   }, []);
 
-  // Calcular el total cuando cambie productsCart
   useEffect(() => {
-    let total = productsCart.reduce((acc, item) => acc + item.price, 0);
-    setTotalPrice(total);
-  }, [productsCart]); // 🔥 Se ejecuta cada vez que cambia `productsCart`
+    if (user) {
+      fetchData(user);
+    }
+  }, [user]);
 
-  const handleRemoveProduct = (id) => {
-    const updatedCart = productsCart.filter((item) => item.id !== id);
-    localStorage.setItem("cartList", JSON.stringify(updatedCart));
-    setProductsCart(updatedCart);
-    const total = productsCart.reduce((acc, item) => acc + item.price, 0);
-    
-    setTotalPrice(total);
+  const fetchData = async (user) => {
+    const result = await getCartByUser(user);
+    setProducts(result.data.items);
   };
 
+  const fetchCartDataStorage = () => {
+    const shopCart = localStorage.getItem("shopCart");
+    const parsedCart = shopCart ? JSON.parse(shopCart) : [];
+    setProducts(parsedCart); // Ahora `products` se llena con los datos del localStorage
+  };
+    
   useEffect(() => {
-      const total = productsCart.reduce((acc, item) => acc + item.price, 0);
-      setTotalPrice(total);
-    }, [productsCart]);
+    if (!products || products.length === 0) return; // ✅ Evita errores
+  
+    const total = products.reduce((acc, item) => acc + item.Price, 0);
+    const discount = products.reduce((acc, item) => acc + item.Price * (item.Discount / 100), 0);
+  
+    setTotalDiscount(discount);
+    setTotalPrice(total);
+  }, [products]);
+
 
   const clearCart = () => {
-    localStorage.removeItem("cartList");
-    setProductsCart([]);
+    localStorage.removeItem("shopCart");
+    setProducts([]);
   };
-
-  if (productsCart.length === 0) {
+  if (!products || products.length === 0) {
     return (
       <div className="min-h-screen w-full bg-gray-400 flex items-center justify-center p-4">
         <div>
@@ -57,39 +71,55 @@ const ShoppingCartPage = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center p-4 sm:p-6 md:p-8">
+      <h1 className="text-3xl font-semibold">MI CARRITO</h1>
 
-  <h1 className="text-3xl font-semibold">MI CARRITO</h1>
+      <button
+        className="rounded-md p-2 shadow-xl bg-gray-700 text-white mt-4 w-full max-w-xs"
+        onClick={clearCart}
+      >
+        Vaciar carrito
+      </button>
 
-  <button 
-    className="rounded-md p-2 shadow-xl bg-gray-700 text-white mt-4 w-full max-w-xs"
-    onClick={clearCart} 
-  >
-    Vaciar carrito
-  </button>
+      <div className="mt-6 flex flex-col md:flex-row justify-between mb-20 gap-6 w-full max-w-4xl">
+        {/* Lista de productos */}
+        <div className="p-4 flex flex-col gap-6 w-full md:w-3/5 lg:w-2/3 lg:pr-12">
+        {products.map((item) => (
+          <Cart key={item.Id_Product} item={item} setProducts={setProducts} user={user} />
+        ))}
+        </div>
 
-  <div className="mt-6 flex flex-col md:flex-row justify-between gap-6 w-full max-w-4xl">
-    {/* Lista de productos */}
-    <div className="p-4 flex flex-col gap-6 w-full">
-      {productsCart.map((item, index) => (
-        <Cart key={index} item={item} onRemove={handleRemoveProduct} />
-      ))}
-    </div>
-
-    <div className="bg-white flex flex-col p-4 rounded-2xl w-full max-w-sm shadow-lg">
-      <h3 className="text-xl font-bold text-center">Pedido</h3>
-      <span className="text-lg text-center">Total a pagar: ${Math.trunc(43*totalPrice)}</span>
-
-      <div className="mt-4 flex flex-col gap-3">
-        <button className="rounded-md p-2 shadow-md bg-red-500 text-white w-full">
-          Realizar pedido online
-        </button>
-        <button className="rounded-md p-2 shadow-md bg-green-600 text-white w-full">
-          Comprar por WhatsApp
-        </button>
-      </div>
-    </div>
+        <div className="bg-white lg:flex flex-col p-4 rounded-2xl w-full hidden max-w-sm shadow-lg lg:fixed lg:right-4 lg:top-60">
+  <h3 className="text-xl font-bold text-center">Pedido</h3>
+  <span className="text-md text-center">Precio total: ${totalPrice}</span>
+  {totalDiscount > 0 && (
+    <span className="text-lg text-center text-red-500">Descuento: -${Math.trunc(totalDiscount)}</span>
+  )}
+  <span className="text-lg text-center font-semibold">
+    Total a pagar: ${Math.trunc(totalPrice - totalDiscount)}
+  </span>
+  <div className="mt-4 flex flex-col gap-3">
+   <WhatsAppCartButton products={products}/>
+   <ButtonShopOnline userGmail={userGmail}/>
   </div>
 </div>
+
+{/* Solo en pantallas pequeñas (se oculta en grandes) */}
+<div className="fixed z-50 w-full h-auto max-w-lg bg-[#FAF3E0] border border-gray-200 rounded-t-2xl bottom-20 left-1/2 -translate-x-1/2 shadow-lg p-4 lg:hidden">
+  <h3 className="text-xl font-bold text-center">Pedido</h3>
+  <span className="text-md text-center">Precio total: ${totalPrice}</span>
+  {totalDiscount > 0 && (
+    <span className="text-lg text-center text-red-500">Descuento: -${Math.trunc(totalDiscount)}</span>
+  )}
+  <span className="text-lg text-center font-semibold">
+    Total a pagar: ${Math.trunc(totalPrice - totalDiscount)}
+  </span>
+  <div className="mt-4 flex flex-col gap-3">
+  <WhatsAppCartButton products={products}/>
+  <ButtonShopOnline userGmail={userGmail}/>
+  </div>
+</div>
+      </div>
+    </div>
   );
 };
 

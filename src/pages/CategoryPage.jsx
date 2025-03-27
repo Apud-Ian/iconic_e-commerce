@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getByCat } from "../api/product.js";
 import Card from "../components/Card.jsx";
+import Aside from "../components/Aside.jsx";
 
 const CategoryPage = () => {
   const { category } = useParams();
@@ -11,7 +12,7 @@ const CategoryPage = () => {
   const [error, setError] = useState(null);
   const [order, setOrder] = useState(""); 
 
-  const totalPages = 10; // Número total de páginas
+  const totalPages = 1; // Número total de páginas
 
   // Llamada a la API
   useEffect(() => {
@@ -32,8 +33,8 @@ const CategoryPage = () => {
 
   // Ordenar productos
   const sortedProducts = [...data].sort((a, b) => {
-    if (order === "lower") return a.price - b.price;
-    if (order === "higher") return b.price - a.price;
+    if (order === "lower") return a.Price - b.Price;
+    if (order === "higher") return b.Price - a.Price;
     return 0;
   });
 
@@ -59,31 +60,38 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="lg:p-8  sm:items-center">
+      <div className="flex mr-4  w-full justify-center lg:justify-end ">
       {/* Título */}
-      <h3 className="text-2xl font-semibold mb-4">Ordenar por precio</h3>
+      <div className="flex flex-col items-center mr-2 ">
+      <h3 className="text-2xl align-middle text-center lg:text-right font-light">Ordenar por precio</h3>
 
       {/* Botones de ordenamiento */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex p-1 gap-4 mb-6 ">
         <button 
           onClick={() => setOrder("lower")}  
-          className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
+          className="px-4 sm:px-0 py-2 text-sm sm:font-light text-gray-900 bg-transparent border border-gray-50 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
         >
           Menor precio 
         </button>
         <button 
           onClick={() => setOrder("higher")} 
-          className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
+          className="px-4 sm:px-1 font-light py-2 text-sm text-gray-900 bg-transparent border border-gray-50 rounded-lg hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-500"
         >
           Mayor precio
         </button>
       </div>
+      </div>
+      </div>
 
       {/* Productos ordenados */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {sortedProducts.map((item, index) => (
-          <Card key={index} item={item} />
-        ))}
+      <div className="flex flex-col-2 lg:gap-6">
+        <div className="hidden w-1/5 lg:block"><Aside /></div>
+          <div className="grid gap-2 w-full h-full lg:p-4 grid-cols-2 ml-0 lg:ml-12 lg:items-end  lg:grid-cols-4">
+            {sortedProducts.map((item, index) => (
+              <Card key={index} item={item} />
+            ))}
+          </div>
       </div>
 
       {/* Paginación */}

@@ -8,8 +8,10 @@ import CreateProduct from './pages/CreateProduct.jsx';
 import ShoppingCartPage from './pages/ShoppingCartPage.jsx';
 import NavBot from './components/NavBot.jsx';
 import { useEffect } from 'react';
-
-
+import UserPage from './pages/UserPage.jsx';
+import Footer from './components/Footer.jsx';
+import AboutUsPage from './pages/AboutUsPage.jsx';
+import TermsAndConditions from './pages/TermsAndConditions.jsx';
 
 function App() {
 
@@ -35,10 +37,15 @@ function App() {
           <Route path="/iconic_e-commerce/" element={<HomePage/>} />
           <Route path="/iconic_e-commerce/createProduct" element={<CreateProduct/>}/>
           <Route path="/iconic_e-commerce/category/:category" element={<CategoryPage />} />
-          <Route path='/iconic_e-commerce/product/:id' element={<ProductPage />}/>
+          <Route path='/iconic_e-commerce/product/:Name_Product' element={<ProductPage />}/>
           <Route path='/iconic_e-commerce/ShoppingCart' element={<ShoppingCartPage/>} />
+          <Route path='/iconic_e-commerce/UserPage' element={<UserPage/>}/>
+          <Route path='/iconic_e-commerce/about' element={<AboutUsPage/>}/>
+          <Route path='/iconic_e-commerce/terms' element={<TermsAndConditions/>}/>
         </Routes>
+        <Footer />
         <NavBot/>
+        <div className='h-18 w-full md:h-0 md:w-0'></div>
       </div>
     </>
   )

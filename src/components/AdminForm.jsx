@@ -6,7 +6,7 @@ import FormSize from "./FormSize.jsx";
 
 const AdminForm = () => {
    const [categoriesData, setCategoriesData] = useState([]);
-   const [name, setName] = useState("");
+   const [name, setName ] = useState("");
    const [description, setDescription] = useState("");
    const [category, setCategory] = useState([]);
    const [price, setPrice] = useState(0);
@@ -17,6 +17,9 @@ const AdminForm = () => {
    const [width , setwidth] = useState(0);
    const [height , setheight] = useState(0);
    let Onesize = false;
+
+
+   
    const handleSizeChange = (sizes) => {
      setSelectedSizes(sizes);
    };
@@ -83,11 +86,11 @@ const AdminForm = () => {
           console.error("No se pudieron subir las imágenes");
           return;
         }
-  
+        const Name_Product = name.trim();
         // ✅ Crear el producto con los datos JSON
         const newProduct = {
           Id_Category: category,
-          Name_Product: name,
+          Name_Product: Name_Product,
           Description_Product: description,
           Price: price,
           Discount: discount,
@@ -98,8 +101,15 @@ const AdminForm = () => {
           Height: height,
           image: imageUrls, // ✅ Usamos las URLs en lugar de los archivos
         };
-  
+        console.log('crear producto', 14)
         const result = await createProduct(newProduct);
+        console.log(result)
+        if(result.success){
+          window.location.reload();
+        }
+        if(!result.success){
+          alert(result.message)
+        }
         return result;
       } catch (error) {
         console.error("Error al crear producto:", error);
@@ -110,38 +120,40 @@ const AdminForm = () => {
   };
    return (
     <div className="m-1 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 xl:gap-16">
-    <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-3xl mx-auto">
-      <form className="grid gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="bg-white p-8 shadow-lg rounded-xl w-full max-w-3xl mx-auto">
+      <form className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="name">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="name" >
               Nombre:
             </label>
             <input
               type="text"
               id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5"
+              className="mt-1 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => setName(e.target.value)}
+              minLength="3" maxLength="50" required
             />
           </div>
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="description">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="description">
               Descripción:
             </label>
             <input
               type="textarea"
               id="description"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+              className="mt-1 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => setDescription(e.target.value)}
+              minLength="5" maxLength="700" required
             />
           </div>
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="category">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="category">
               Categorías:
             </label>
-            <ul className="space-y-2 overflow-y-auto w-5/6 max-h-32">
+            <ul className="mt-2 space-y-2 overflow-y-auto max-h-32 border rounded-lg p-2">
               {categoriesData.map((cat) => (
-                <li className="flex justify-between items-center bg-gray-100 p-2 rounded shadow-sm" key={cat.Id_Category}>
+                <li className="flex justify-between items-center bg-gray-100 p-3 rounded shadow-sm" key={cat.Id_Category}>
                   <label htmlFor={cat.Name_Category}>{cat.Name_Category}</label>
                   <input
                     type="checkbox"
@@ -153,14 +165,16 @@ const AdminForm = () => {
             </ul>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900">Precio:</label>
+            <label htmlFor="price" className="block text-sm font-medium text-gray-700">Precio:</label>
             <input
               type="number"
               id="price"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5"
+              className="mt-1 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => setPrice(Number(e.target.value))}
+              min="1"
+              required
             />
           </div>
           <div>
@@ -168,8 +182,10 @@ const AdminForm = () => {
             <input
               type="number"
               id="discount"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4 p-2.5"
+              className="mt-1 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => setDiscount(Number(e.target.value))}
+              min={0}
+              max={100}
             />
           </div>
         </div>
@@ -178,9 +194,9 @@ const AdminForm = () => {
         <FormSize onChange={handleSizeChange}/>
         <div>
           <label htmlFor="width">ancho:</label>
-          <input type="number" name="width" onChange={(e) => setwidth(Number(e.target.value))} />
+          <input type="number" name="width" onChange={(e) => setwidth(Number(e.target.value))} max={256}/>
           <label htmlFor="height">largo:</label>
-          <input type="number" name="height" onChange={(e) => setheight(Number(e.target.value))} />
+          <input type="number" name="height" onChange={(e) => setheight(Number(e.target.value))}  max={256}/>
         </div>
         <button
    type="button"

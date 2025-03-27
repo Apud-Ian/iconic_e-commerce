@@ -1,30 +1,54 @@
-import ICONIC from '../assets/ICONIC.png'
-import Card from "../components/Card.jsx";
-const HomePage = () =>{
+import { useEffect, useState } from "react";
 
-    return(
+import { getByCat } from "../api/product.js";
+import ProductCarousel from "../components/Carrusel.jsx";
+import Banner from "../components/Banner.jsx";
+
+const HomePage = () => {
+  const [newProduct, setNewProduct] = useState([]);
+  const [productDiscounts, setProductDiscounts] = useState([]);
+
+  // Función para obtener los productos
+  const fetchDataProduct = async () => {
+    try {
+      const newArrivals = await getByCat("nuevos arribos", 1);
+      const discounts = await getByCat("Liquidación", 1);
+      setNewProduct(newArrivals.data || []);
+      setProductDiscounts(discounts.data || []);
+    } catch (error) {
+      console.error("Error al obtener productos:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataProduct();
+  }, []);
+
+  return (
     <div className="w-screen overflow-x-hidden bg-white">
 
-    <div className="relative w-full h-[500px]">
-      <img
-        className="absolute inset-0 w-full h-full object-cover  overflow-hidden"
-        src={ICONIC}
-        alt="Fondo"
-      />
-      </div>
-      <div className="p-8">
-      <h3 className="text-2xl  font-semibold mb-4">Nuevos arribos</h3>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      </div>
-    </div>
-    <div className="p-8">
-      <h3 className="text-2xl text-white font-semibold mb-4">Liquidación</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Imagen de fondo */}
+      <Banner />
 
-       </div>
-     </div>
+      {/* Nuevos arribos */}
+      <div className="md:p-8 p-1  w-full flex flex-col items-center">
+        <h3 className="text-2xl border-b-2 border-[#D4AF37] font-light mb-4">
+          Nuevos arribos
+        </h3>
+        <div className="w-full">
+          <ProductCarousel products={newProduct} limit={4}/>
+        </div>
+      </div>
+
+      {/* Liquidación */}
+      <div className="md:p-8 p-1 w-full flex flex-col items-center">
+        <h3 className="text-2xl border-b-2 border-[#D4AF37] font-light mb-4">Liquidación</h3>
+        <div className="w-full">
+          <ProductCarousel products={productDiscounts} limit={4}/>
+        </div>
+      </div>
     </div>
-    );
-};
+  );
+}; 
 
 export default HomePage;

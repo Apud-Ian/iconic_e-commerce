@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminForm from "../components/AdminForm";
+import EditForm from "../components/EditForm"
 import CategoryForm from "../components/CategoryForm";
+import { getUser } from "../api/user";
 
 const CreateProduct = () => {
   const [visible, setVisible] = useState(1);
+  
+  useEffect(() => {
+    const checkUser = async () => {
+        const result = await getUser();
+        if (result.Role !== "admin") {
+            window.location.href = "/iconic_e-commerce/";
+        }
+        console.log(result)
+    };
+
+    checkUser();
+}, []);
 
   const buttons = [
     { id: 1, label: "Crear Producto", color: "blue" },
@@ -13,6 +27,7 @@ const CreateProduct = () => {
 
   return (
     <div className="relative h-full overflow-hidden w-full flex flex-col items-center justify-center gap-4 p-4">
+      
       {/* Botones de selección */}
       <div className="flex gap-2">
         {buttons.map(({ id, label, color }) => (
@@ -42,12 +57,13 @@ const CreateProduct = () => {
         </div>
 
         {/* Formulario de Actualizar Producto */}
+
         <div
           className={`absolute top-0 left-0 w-full transition-transform duration-500 ${
             visible === 2 ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <AdminForm />
+          <EditForm />
         </div>
 
         {/* Formulario de Crear Categoría */}
